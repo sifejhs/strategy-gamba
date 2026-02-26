@@ -3,6 +3,7 @@ import "./globals.css";
 import { getMetadataBase } from "@/lib/seo-hreflang";
 import StatsTracker from "@/components/StatsTracker";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 const ROOT_KEYWORDS = [
   "Stake mines strategy",
@@ -48,6 +49,7 @@ export default function RootLayout({
         <StatsTracker />
         {children}
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
