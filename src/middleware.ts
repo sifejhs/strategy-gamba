@@ -8,6 +8,14 @@ const ADMIN_COOKIE_VALUE = "authenticated";
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
+  // Google Search Console verification file — serve directly from middleware
+  if (path === "/google28a1bb12c03039aa.html") {
+    return new NextResponse(
+      "google-site-verification: google28a1bb12c03039aa.html",
+      { status: 200, headers: { "content-type": "text/html" } }
+    );
+  }
+
   // Geo-based language redirect: / → /{locale} from IP country or Accept-Language
   if (path === "/") {
     const country = request.headers.get("x-vercel-ip-country") ?? undefined;
@@ -30,5 +38,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*"],
+  matcher: ["/", "/admin/:path*", "/google28a1bb12c03039aa.html"],
 };
