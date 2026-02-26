@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
 
   // Geo-based language redirect: / → /{locale} from IP country or Accept-Language
   if (path === "/") {
-    const country = request.geo?.country ?? request.headers.get("x-vercel-ip-country") ?? undefined;
+    const country = request.headers.get("x-vercel-ip-country") ?? undefined;
     const acceptLanguage = request.headers.get("accept-language") ?? undefined;
     const locale = getLocaleFromRequest(country, acceptLanguage);
     return NextResponse.redirect(new URL(`/${locale}`, request.url));
