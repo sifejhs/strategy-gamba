@@ -13,16 +13,8 @@ import CasinoLogo from "@/components/CasinoLogo";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import FaqJsonLd from "@/components/FaqJsonLd";
 
-export async function generateStaticParams() {
-  const langs = ["en", "zh", "es", "hi", "ar", "pt", "ru", "ja", "de", "fr", "ko", "tr", "vi", "it", "nl", "pl", "id", "th", "bn", "ms"] as const;
-  const params: { lang: string; casinoSlug: string }[] = [];
-  for (const lang of langs) {
-    for (const c of CASINOS) {
-      params.push({ lang, casinoSlug: c.slug });
-    }
-  }
-  return params;
-}
+/** Dynamic so Vercel build stays under 75MB; pages server-rendered on demand. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

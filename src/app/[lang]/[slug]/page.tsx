@@ -30,17 +30,8 @@ function hashSlug(s: string): number {
   return Math.abs(h);
 }
 
-export async function generateStaticParams() {
-  const langs = ["en", "zh", "es", "hi", "ar", "pt", "ru", "ja", "de", "fr", "ko", "tr", "vi", "it", "nl", "pl", "id", "th", "bn", "ms"] as const;
-  const slugs = getAllStrategySlugs();
-  const params: { lang: string; slug: string }[] = [];
-  for (const lang of langs) {
-    for (const slug of slugs) {
-      params.push({ lang, slug });
-    }
-  }
-  return params;
-}
+/** Dynamic so Vercel build stays under 75MB; pages are server-rendered on demand and edge-cached. */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
