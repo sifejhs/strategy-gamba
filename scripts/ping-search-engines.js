@@ -2,10 +2,10 @@
  * Ping all major search engines with sitemap URL for fast indexing (run after deploy).
  * Google, Bing, Yandex – day-1 discovery. Baidu needs separate submission with token.
  *
- * Usage: SITE=https://strategy-gamba.com node scripts/ping-search-engines.js
+ * Usage: SITE=https://strategy-gamba.vercel.app node scripts/ping-search-engines.js
  * Or add to package.json: "postbuild": "node scripts/ping-search-engines.js"
  */
-const SITE = process.env.SITE || "https://strategy-gamba.com";
+const SITE = process.env.SITE || "https://strategy-gamba.vercel.app";
 const sitemapUrl = `${SITE}/sitemap.xml`;
 
 const pings = [

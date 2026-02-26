@@ -1,7 +1,24 @@
 import type { Metadata } from "next";
 import { LOCALES, type Locale } from "./locales";
 
-const BASE = "https://strategy-gamba.com";
+/**
+ * Resolve the site base URL (no trailing slash).
+ * Priority: SITE_URL env → NEXT_PUBLIC_VERCEL_URL → hardcoded fallback.
+ * On Vercel, NEXT_PUBLIC_VERCEL_URL is auto-set to the deployment URL
+ * (e.g. "strategy-gamba.vercel.app") but without a protocol, so we prepend https://.
+ */
+function resolveSiteBase(): string {
+  if (process.env.SITE_URL) {
+    return process.env.SITE_URL.replace(/\/+$/, "");
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`.replace(/\/+$/, "");
+  }
+  // Local dev / CI fallback
+  return "https://strategy-gamba.vercel.app";
+}
+
+const BASE = resolveSiteBase();
 
 const DEFAULT_LANG: Locale = "en";
 

@@ -1,13 +1,13 @@
 /**
  * IndexNow – instant URL submission to Bing, Yandex, etc. (fast indexing).
  * 1. Ensure public/INDEXNOW_KEY.txt exists and contains the key (e.g. run: echo "your-random-key-32chars" > public/INDEXNOW_KEY.txt)
- * 2. SITE=https://strategy-gamba.com node scripts/indexnow-submit.js
+ * 2. SITE=https://strategy-gamba.vercel.app node scripts/indexnow-submit.js
  *
  * Or use key from env: INDEXNOW_KEY=xxx node scripts/indexnow-submit.js
  */
 const fs = require("fs");
 const path = require("path");
-const SITE = process.env.SITE || "https://strategy-gamba.com";
+const SITE = process.env.SITE || "https://strategy-gamba.vercel.app";
 const KEY_FILE = path.join(__dirname, "..", "public", "INDEXNOW_KEY.txt");
 const KEY = process.env.INDEXNOW_KEY || (fs.existsSync(KEY_FILE) ? fs.readFileSync(KEY_FILE, "utf8").trim() : null);
 
