@@ -2,19 +2,23 @@ import type { Metadata } from "next";
 import { LOCALES, type Locale } from "./locales";
 
 /**
- * Resolve the site base URL (no trailing slash).
- * Priority: SITE_URL env → NEXT_PUBLIC_VERCEL_URL → hardcoded fallback.
- * On Vercel, NEXT_PUBLIC_VERCEL_URL is auto-set to the deployment URL
- * (e.g. "strategy-gamba.vercel.app") but without a protocol, so we prepend https://.
+ * Resolve the canonical site base URL (no trailing slash).
+ * Priority:
+ *   1. SITE_URL (explicit override, e.g. custom domain)
+ *   2. NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL (stable production URL like "strategy-gamba.vercel.app")
+ *   3. Hardcoded fallback
+ *
+ * NOTE: We intentionally do NOT use NEXT_PUBLIC_VERCEL_URL because it resolves
+ * to the unique per-deployment URL (strategy-gamba-abc123-...vercel.app),
+ * not the stable production domain.
  */
 function resolveSiteBase(): string {
   if (process.env.SITE_URL) {
     return process.env.SITE_URL.replace(/\/+$/, "");
   }
-  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`.replace(/\/+$/, "");
+  if (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`.replace(/\/+$/, "");
   }
-  // Local dev / CI fallback
   return "https://strategy-gamba.vercel.app";
 }
 
