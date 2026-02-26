@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-site-verification" content="28a1bb12c03039aa" />
+        <meta name="google-site-verification" content="BoCim3k2Mf4IimFGqDHRkBCrF4jBOtubQbO3KvWK6I8" />
         <meta name="theme-color" content="#0f172a" />
         <link rel="preconnect" href="https://strategy-gamba.vercel.app" />
         <link rel="dns-prefetch" href="https://www.google.com" />
