@@ -40,7 +40,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="theme-color" content="#0f172a" />
-        <link rel="preconnect" href="https://strategy-gamba.com" />
+        <link rel="preconnect" href="https://strategy-gamba.vercel.app" />
         <link rel="dns-prefetch" href="https://www.google.com" />
         <link rel="dns-prefetch" href="https://www.bing.com" />
       </head>
