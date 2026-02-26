@@ -1,0 +1,15 @@
+# Do not upload these – Vercel will run npm install and npm run build
+node_modules
+.next
+.vercel
+
+# Local env (never upload secrets)
+.env
+.env.local
+.env.*.local
+
+# Git and IDE
+.git
+.cursor
+*.log
+.DS_Store

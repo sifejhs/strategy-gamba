@@ -1,0 +1,32 @@
+{
+  "name": "referral-casino",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "start:3002": "next start -p 3002",
+    "lint": "next lint",
+    "ping": "node scripts/ping-search-engines.js",
+    "indexnow": "node scripts/indexnow-submit.js",
+    "deploy:ping": "npm run build && node scripts/ping-search-engines.js && node scripts/indexnow-submit.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.3.0",
+    "@vercel/speed-insights": "^1.3.1",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.2.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0"
+  }
+}
