@@ -3,7 +3,7 @@ import { SITE_BASE } from "@/lib/seo-hreflang";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: ["/", "/api/sitemap-index", "/api/sitemap-segment/"], disallow: ["/admin", "/admin/", "/api/"] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/admin/"] },
     sitemap: `${SITE_BASE}/sitemap.xml`,
   };
 }
