@@ -29,10 +29,21 @@ export async function getDownloadUrl(): Promise<string> {
 
 export async function setDownloadUrl(url: string): Promise<void> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return;
-  const { put } = await import("@vercel/blob");
+  const { put, del, list } = await import("@vercel/blob");
+
+  // Delete existing config first to avoid conflicts
+  try {
+    const { blobs } = await list({ prefix: "config/" });
+    const existing = blobs.find((b) => b.pathname === CONFIG_PATH);
+    if (existing) {
+      await del(existing.url);
+    }
+  } catch {
+    // ignore
+  }
+
   await put(CONFIG_PATH, url, {
     access: "public",
     addRandomSuffix: false,
-    allowOverwrite: true,
   });
 }

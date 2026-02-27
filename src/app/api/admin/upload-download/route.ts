@@ -41,14 +41,26 @@ export async function POST(request: NextRequest) {
 
   const token = process.env.BLOB_READ_WRITE_TOKEN;
 
+  const buffer = Buffer.from(await file.arrayBuffer());
+
   if (token) {
     try {
-      const { put } = await import("@vercel/blob");
-      const buffer = Buffer.from(await file.arrayBuffer());
+      const { put, del, list } = await import("@vercel/blob");
+
+      // Delete existing file first to avoid conflicts
+      try {
+        const { blobs } = await list({ prefix: "downloads/" });
+        const existing = blobs.find((b) => b.pathname === ZIP_PATH);
+        if (existing) {
+          await del(existing.url);
+        }
+      } catch {
+        // ignore delete errors
+      }
+
       const blob = await put(ZIP_PATH, buffer, {
         access: "public",
         addRandomSuffix: false,
-        allowOverwrite: true,
         contentType: "application/zip",
       });
       await setDownloadUrl(blob.url);
@@ -56,21 +68,21 @@ export async function POST(request: NextRequest) {
         JSON.stringify({ ok: true, url: blob.url, message: "Uploaded. All download buttons now use this file." }),
         { headers: { "Content-Type": "application/json" } }
       );
-    } catch (err) {
-      console.error("Blob upload error:", err);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error("Blob upload error:", message);
       return new Response(
-        JSON.stringify({ error: "Upload failed. Check BLOB_READ_WRITE_TOKEN." }),
+        JSON.stringify({ error: `Upload failed: ${message}` }),
         { status: 500 }
       );
     }
   }
 
-  // Local dev: write to public/downloads/tools.zip
+  // Local dev fallback: write to public/downloads/tools.zip
   try {
     const dir = path.join(process.cwd(), "public", "downloads");
     await mkdir(dir, { recursive: true });
     const filePath = path.join(dir, "tools.zip");
-    const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(filePath, buffer);
     return new Response(
       JSON.stringify({
@@ -80,8 +92,9 @@ export async function POST(request: NextRequest) {
       }),
       { headers: { "Content-Type": "application/json" } }
     );
-  } catch (err) {
-    console.error("File write error:", err);
-    return new Response(JSON.stringify({ error: "Failed to save file" }), { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("File write error:", message);
+    return new Response(JSON.stringify({ error: `Failed to save file: ${message}` }), { status: 500 });
   }
 }
