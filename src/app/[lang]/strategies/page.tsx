@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, SITE_BASE } from "@/lib/seo-hreflang";
+import { buildHreflang, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getDefaultMetaKeywords } from "@/lib/keywords";
 import { getAllStrategySlugs } from "@/lib/strategy-data";
 import Disclaimer from "@/components/Disclaimer";
@@ -31,7 +31,7 @@ export async function generateMetadata({
     keywords: keywords.join(", "),
     alternates,
     openGraph: { title: t.strategiesListTitle, description: t.strategiesListDesc },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 

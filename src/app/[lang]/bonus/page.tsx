@@ -2,10 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, getMetadataBase } from "@/lib/seo-hreflang";
+import { buildHreflang, getMetadataBase, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getMetaKeywords } from "@/lib/keywords";
 import { CASINOS } from "@/lib/strategy-data";
-import { SITE_BASE } from "@/lib/seo-hreflang";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
 import DownloadCta from "@/components/DownloadCta";
@@ -42,7 +41,7 @@ export async function generateMetadata({
       locale,
     },
     twitter: { card: "summary_large_image", title: t.bonusTitle, description: t.bonusDesc },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 

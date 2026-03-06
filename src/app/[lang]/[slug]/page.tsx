@@ -12,7 +12,7 @@ import {
   getStrategyDescriptionForLocale,
   getTranslations,
 } from "@/lib/translations";
-import { buildHreflang, SITE_BASE, getMetadataBase } from "@/lib/seo-hreflang";
+import { buildHreflang, SITE_BASE, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getMetaKeywords } from "@/lib/keywords";
 import { isLocale, type Locale } from "@/lib/locales";
 import Disclaimer from "@/components/Disclaimer";
@@ -70,7 +70,7 @@ export async function generateMetadata({
     alternates,
     openGraph: { title, description, images: [{ url: ogImage, width: 1200, height: 630, alt: `${names.casino} ${names.game} ${names.variant}` }], type: "article" },
     twitter: { card: "summary_large_image", title, description },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 

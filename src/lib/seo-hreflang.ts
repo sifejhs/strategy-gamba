@@ -1,21 +1,35 @@
 import type { Metadata } from "next";
 import { LOCALES, type Locale } from "./locales";
 
+/** Production domain – used for canonicals so preview/staging never declare themselves as canonical. */
+const PRODUCTION_BASE = "https://strategy-gamba.vercel.app";
+
+/** True only on Vercel production; use for canonicals base and robots (noindex on preview). */
+export const IS_PRODUCTION = process.env.VERCEL_ENV === "production";
+
 /**
  * Canonical site base URL (no trailing slash).
- * Hardcoded to the stable Vercel production domain.
- * If you ever move to a custom domain, just change this one line.
+ * On production we use SITE_URL if set (e.g. custom domain); on preview/staging we always use
+ * PRODUCTION_BASE so canonicals point to the live site and Google doesn’t index preview URLs.
  */
-const BASE = process.env.SITE_URL?.replace(/\/+$/, "") || "https://strategy-gamba.vercel.app";
+const BASE =
+  IS_PRODUCTION && process.env.SITE_URL
+    ? process.env.SITE_URL.replace(/\/+$/, "")
+    : PRODUCTION_BASE;
 
 const DEFAULT_LANG: Locale = "en";
 
-/** Build alternates (canonical + hreflang + x-default) for Google & all engines. x-default = English for global fallback. */
+/** Normalize path: no leading/trailing slashes, no double slashes. Ensures canonical is unique and self-referencing. */
+function normalizePath(p: string): string {
+  return p.replace(/^\/+|\/+$/g, "").replace(/\/+/g, "/") || "";
+}
+
+/** Build alternates (canonical + hreflang + x-default). Canonical = this page's URL so each page is self-referencing. */
 export function buildHreflang(
   currentLang: Locale,
   pathAfterLang: string
 ): NonNullable<Metadata["alternates"]> {
-  const path = pathAfterLang.replace(/^\//, "");
+  const path = normalizePath(pathAfterLang);
   const canonical = path ? `${BASE}/${currentLang}/${path}` : `${BASE}/${currentLang}`;
   const languages: Record<string, string> = {};
   for (const locale of LOCALES) {

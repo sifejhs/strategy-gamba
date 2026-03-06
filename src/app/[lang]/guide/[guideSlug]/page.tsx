@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, getMetadataBase } from "@/lib/seo-hreflang";
+import { buildHreflang, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getMetaKeywords } from "@/lib/keywords";
 import { GUIDES } from "@/lib/strategy-data";
 import Disclaimer from "@/components/Disclaimer";
@@ -44,7 +44,7 @@ export async function generateMetadata({
       locale,
     },
     twitter: { card: "summary_large_image", title, description },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 

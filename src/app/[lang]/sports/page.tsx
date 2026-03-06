@@ -2,10 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang } from "@/lib/seo-hreflang";
+import { buildHreflang, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getDefaultMetaKeywords } from "@/lib/keywords";
 import { SPORTS } from "@/lib/strategy-data";
-import { SITE_BASE } from "@/lib/seo-hreflang";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
 import DownloadCta from "@/components/DownloadCta";
@@ -31,7 +30,7 @@ export async function generateMetadata({
     keywords: keywords.join(", "),
     alternates,
     openGraph: { title: t.sportsTitle, description: t.sportsDesc },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 

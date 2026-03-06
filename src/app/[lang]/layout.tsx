@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { LOCALES, type Locale, isLocale } from "@/lib/locales";
-import { buildHreflang, getMetadataBase } from "@/lib/seo-hreflang";
+import { buildHreflang, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getTranslations } from "@/lib/translations";
 import { getDefaultMetaKeywords } from "@/lib/keywords";
 import SetLang from "@/components/SetLang";
@@ -35,7 +35,7 @@ export async function generateMetadata({
       locale: lang,
     },
     twitter: { card: "summary_large_image", title: t.homeTitle, description: t.homeDesc },
-    robots: "index, follow",
+    robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }
 
