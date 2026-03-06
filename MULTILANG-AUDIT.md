@@ -37,12 +37,16 @@ en, zh, es, hi, ar, pt, ru, **ja**, de, fr, ko, tr, vi, it, nl, pl, id, th, bn, 
 
 ## Titles & descriptions per language
 
-- **Strategy pages** (`[lang]/[slug]`):
-  - **en, zh, es**: Full titleTemplates + descSnippets + intros in that language.
-  - **ja**: Full set added (titleTemplates, descSnippets, intros, sports/bonus/payments/guides/sportPage/bonusCasino/guidePage) so `/ja/*` has Japanese titles and meta descriptions.
-  - Other locales: Use `...en()` for title/desc with overrides for siteName, disclaimer, homeTitle, etc. where defined; keywords remain locale-specific.
-- **List/section pages** (strategies, sports, bonus, guides, payments, about): Use **getTranslations(locale)** → Japanese and others with overrides get the right titles/descriptions (ja has full section strings now).
-- **Sport/guide/bonus detail pages**: Use `t.sportPageTitle`, `t.guidePageTitle`, `t.bonusCasinoTitle`, etc. → ja (and zh, es, de, fr, etc. where overridden) get localized titles/descriptions.
+- **All 20 locales** now have **full translations** for:
+  - **titleTemplates** (10 variants) – strategy page `<title>` in that language
+  - **descSnippets** (10 variants) – strategy page meta description in that language
+  - **intros** (5 variants) – strategy page body intro in that language
+  - **bodyParagraph**, **bodyDisclaimer**
+  - **sportsTitle**, **sportsDesc**, **bonusTitle**, **bonusDesc**, **paymentsTitle**, **paymentsDesc**, **guidesTitle**, **guidesDesc**
+  - **sportPageTitle(n)**, **sportPageDesc(n)**, **bonusCasinoTitle(n)**, **bonusCasinoDesc(n)**, **guidePageTitle(n)**, **guidePageDesc(n)**
+  - **strategiesListTitle**, **strategiesListDesc**, **viewAll**, **examplePages**, **byGame**, **byCasino**, **homeTitle**, **homeDesc**, **disclaimer**, etc.
+- **Strategy pages** (`[lang]/[slug]`): Every locale (en, zh, es, hi, ar, pt, ru, ja, de, fr, ko, tr, vi, it, nl, pl, id, th, bn, ms) gets titles and meta descriptions **in that language**.
+- **List/section pages** and **sport/guide/bonus detail pages**: All use **getTranslations(locale)** and have localized strings for every locale.
 
 ---
 
@@ -69,8 +73,8 @@ en, zh, es, hi, ar, pt, ru, **ja**, de, fr, ko, tr, vi, it, nl, pl, id, th, bn, 
 | 20 locales in LOCALES | OK |
 | Canonical = own URL per page (all types, all langs) | OK |
 | Hreflang: all 20 + x-default on every page | OK |
-| Keywords in locale language (incl. ja) | OK |
-| Japanese titles/descriptions for strategy + section pages | OK (full ja set) |
+| Keywords in locale language (all 20) | OK |
+| Full titles/descriptions for all 20 locales (strategy + sections + sport/guide/bonus) | OK |
 | Sitemap includes all locales for all page types | OK |
 | HTML lang set per locale (SetLang) | OK |
 | Open Graph locale per page | OK |
