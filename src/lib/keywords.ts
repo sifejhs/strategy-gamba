@@ -1,7 +1,15 @@
 import type { Locale } from "./locales";
 import { CASINOS, GAMES, SPORTS } from "./strategy-data";
 
-/** Common human typing errors / misspellings – for SEO rank on typo searches */
+/**
+ * Keywords for search: all types in all 20 languages.
+ * - Casino + game + strategy/predictor (e.g. "Stake mines strategy" → "Stake マインズ 戦略" for ja).
+ * - Sport type (betting, match prediction) in each locale.
+ * - Game type (mines, crash, dice, blackjack, etc.) + strategy/predictor/tips in each locale.
+ * - LOCALE_KEYWORDS = base phrases per language; LOCALE_STEMS = words to build "X strategy", "X predictor"; getMetaKeywords/getSportKeywords use both so every page gets keywords in its language.
+ */
+
+/** Common human typing errors / misspellings – SEO rank on typo searches (Google autocomplete-style) */
 const TYPO_KEYWORDS = [
   "stake stratgy",
   "stake stratagy",
@@ -33,6 +41,39 @@ const TYPO_KEYWORDS = [
   "stratagy gamba",
   "predicter 2026",
   "casino stratagy",
+  "stake vpn",
+  "roobet vpn",
+  "stake bonu",
+  "roobet bonu",
+  "no depost",
+  "withdrwal casino",
+  "stake legal",
+  "roobet legal",
+  "stake alternatve",
+  "roobet alternatve",
+  "crypto casiono",
+  "stake promoo",
+  "roobet welcom bonus",
+  "free spin crypto",
+  "stake withdrwal",
+  "roobet no depost",
+  "vpn for stake",
+  "vpn for roobet",
+  "stake mines predicion",
+  "crash predicter",
+  "rolbit",
+  "bcgame",
+  "bustabit preditor",
+  "aviater",
+  "spaceman stratgy",
+  "jetx preditor",
+  "crypto casio",
+  "sport betting preditor",
+  "bonus code stake",
+  "bonus code roobet",
+  "no deposit bonu",
+  "instant withdrwal",
+  "stake vs roobet",
 ];
 
 /** Top searched casino/gambling keywords – English base, 2026-relevant + long-tail */
@@ -106,9 +147,103 @@ const EN_BASE = [
   "Strategy Gamba",
 ];
 
+/** Top searched: VPN, bonus, legal, alternative, withdrawal – human search intent */
+const EN_EXTRA = [
+  "Stake VPN",
+  "Roobet VPN",
+  "VPN for Stake",
+  "VPN for Roobet",
+  "casino VPN 2026",
+  "best VPN for crypto casino",
+  "Stake no VPN",
+  "Roobet access VPN",
+  "Stake bonus code 2026",
+  "Roobet welcome bonus 2026",
+  "no deposit bonus crypto 2026",
+  "crypto casino no deposit",
+  "free spins crypto casino",
+  "Stake promo code",
+  "Roobet promo code",
+  "is Stake legal",
+  "is Roobet legal",
+  "Stake legal countries",
+  "Roobet legal USA",
+  "Stake alternative",
+  "Roobet alternative",
+  "sites like Stake",
+  "sites like Roobet",
+  "best Stake alternative 2026",
+  "instant withdrawal crypto casino",
+  "fast withdrawal casino",
+  "crypto casino withdrawal time",
+  "Bitcoin casino no KYC",
+  "Stake withdrawal",
+  "Roobet withdrawal",
+  "casino bonus no deposit",
+  "welcome bonus no deposit",
+  "free bonus crypto casino",
+  "Stake free bonus",
+  "Roobet free spins",
+  "crash game predictor",
+  "mines predictor tool",
+  "sports prediction today",
+  "betting tips today",
+];
+
+/** Per-locale word stems – to build "Casino strategy", "Game predictor", "Sport betting" etc. in that language */
+const LOCALE_STEMS: Record<
+  Locale,
+  { strategy: string; predictor: string; tips: string; betting: string; matchPrediction: string }
+> = {
+  en: { strategy: "strategy", predictor: "predictor", tips: "tips", betting: "betting", matchPrediction: "match prediction" },
+  zh: { strategy: "策略", predictor: "预测", tips: "技巧", betting: "投注", matchPrediction: "比赛预测" },
+  es: { strategy: "estrategia", predictor: "predictor", tips: "consejos", betting: "apuestas", matchPrediction: "predicción partidos" },
+  hi: { strategy: "रणनीति", predictor: "भविष्यवाणी", tips: "टिप्स", betting: "बेटिंग", matchPrediction: "मैच भविष्यवाणी" },
+  ar: { strategy: "استراتيجية", predictor: "متنبئ", tips: "نصائح", betting: "مراهنات", matchPrediction: "تنبؤ المباريات" },
+  pt: { strategy: "estratégia", predictor: "predictor", tips: "dicas", betting: "apostas", matchPrediction: "previsão jogos" },
+  ru: { strategy: "стратегия", predictor: "предиктор", tips: "советы", betting: "ставки", matchPrediction: "прогноз матчей" },
+  ja: { strategy: "戦略", predictor: "予測", tips: "ヒント", betting: "ベッティング", matchPrediction: "試合予測" },
+  de: { strategy: "Strategie", predictor: "Predictor", tips: "Tipps", betting: "Wetten", matchPrediction: "Spielvorhersage" },
+  fr: { strategy: "stratégie", predictor: "prédicteur", tips: "conseils", betting: "paris", matchPrediction: "prédiction match" },
+  ko: { strategy: "전략", predictor: "예측", tips: "팁", betting: "베팅", matchPrediction: "경기 예측" },
+  tr: { strategy: "strateji", predictor: "tahminci", tips: "ipuçları", betting: "bahisler", matchPrediction: "maç tahmini" },
+  vi: { strategy: "chiến lược", predictor: "dự đoán", tips: "mẹo", betting: "cá cược", matchPrediction: "dự đoán trận" },
+  it: { strategy: "strategia", predictor: "predictor", tips: "consigli", betting: "scommesse", matchPrediction: "previsione partite" },
+  nl: { strategy: "strategie", predictor: "predictor", tips: "tips", betting: "weddenschappen", matchPrediction: "wedstrijdvoorspelling" },
+  pl: { strategy: "strategia", predictor: "predyktor", tips: "wskazówki", betting: "zakłady", matchPrediction: "predykcja meczu" },
+  id: { strategy: "strategi", predictor: "prediktor", tips: "tips", betting: "taruhan", matchPrediction: "prediksi pertandingan" },
+  th: { strategy: "กลยุทธ์", predictor: "ทำนาย", tips: "เคล็ดลับ", betting: "การเดิมพัน", matchPrediction: "ทำนายแมตช์" },
+  bn: { strategy: "কৌশল", predictor: "ভবিষ্যদ্বাণী", tips: "টিপস", betting: "বেটিং", matchPrediction: "ম্যাচ ভবিষ্যদ্বাণী" },
+  ms: { strategy: "strategi", predictor: "peramal", tips: "tips", betting: "pertaruhan", matchPrediction: "ramalan perlawanan" },
+};
+
+/** Per-locale extra: VPN, bonus, no deposit, legal, alternative, withdrawal – top searched in that language */
+const LOCALE_EXTRA: Record<Locale, string[]> = {
+  en: ["Stake VPN", "Roobet VPN", "casino VPN", "no deposit bonus", "welcome bonus", "is Stake legal", "Stake alternative", "instant withdrawal", "free spins crypto", "promo code casino"],
+  zh: ["Stake VPN", "Roobet VPN", "赌场VPN", "无存款奖金", "欢迎奖金", "Stake合法", "Stake替代", "即时提款", "免费旋转", "促销码"],
+  es: ["Stake VPN", "Roobet VPN", "VPN casino", "bono sin depósito", "bono bienvenida", "Stake legal", "alternativa Stake", "retiro instantáneo", "giros gratis", "código promocional"],
+  hi: ["Stake VPN", "Roobet VPN", "कैसीनो VPN", "नो डिपॉजिट बोनस", "वेलकम बोनस", "Stake कानूनी", "Stake विकल्प", "तुरंत निकासी", "मुफ्त स्पिन", "प्रोमो कोड"],
+  ar: ["Stake VPN", "Roobet VPN", "VPN كازينو", "بونص بدون إيداع", "بونص ترحيب", "Stake قانوني", "بديل Stake", "سحب فوري", "دورات مجانية", "كود ترويجي"],
+  pt: ["Stake VPN", "Roobet VPN", "VPN casino", "bónus sem depósito", "bónus boas-vindas", "Stake legal", "alternativa Stake", "levantamento instantâneo", "giros grátis", "código promocional"],
+  ru: ["Stake VPN", "Roobet VPN", "VPN казино", "бонус без депозита", "приветственный бонус", "Stake легально", "альтернатива Stake", "мгновенный вывод", "бесплатные вращения", "промокод"],
+  ja: ["Stake VPN", "Roobet VPN", "カジノVPN", "ノーデポボーナス", "ウェルカムボーナス", "Stake合法", "Stake代替", "即時出金", "フリースピン", "プロモコード"],
+  de: ["Stake VPN", "Roobet VPN", "Casino VPN", "Bonus ohne Einzahlung", "Willkommensbonus", "Stake legal", "Stake Alternative", "Sofortauszahlung", "Freispiele", "Aktionscode"],
+  fr: ["Stake VPN", "Roobet VPN", "VPN casino", "bonus sans dépôt", "bonus bienvenue", "Stake légal", "alternative Stake", "retrait instantané", "tours gratuits", "code promo"],
+  ko: ["Stake VPN", "Roobet VPN", "카지노 VPN", "노디포 보너스", "웰컴 보너스", "Stake 합법", "Stake 대안", "즉시 출금", "무료 스핀", "프로모 코드"],
+  tr: ["Stake VPN", "Roobet VPN", "casino VPN", "depositsız bonus", "hoş geldin bonusu", "Stake yasal", "Stake alternatifi", "anında çekim", "ücretsiz dönüş", "promosyon kodu"],
+  vi: ["Stake VPN", "Roobet VPN", "VPN casino", "thưởng không nạp", "thưởng chào mừng", "Stake hợp pháp", "thay thế Stake", "rút tiền tức thì", "vòng quay miễn phí", "mã khuyến mãi"],
+  it: ["Stake VPN", "Roobet VPN", "VPN casino", "bonus senza deposito", "bonus benvenuto", "Stake legale", "alternativa Stake", "prelievo istantaneo", "giri gratuiti", "codice promozionale"],
+  nl: ["Stake VPN", "Roobet VPN", "casino VPN", "bonus zonder storting", "welkomstbonus", "Stake legaal", "Stake alternatief", "direct opname", "gratis spins", "promocode"],
+  pl: ["Stake VPN", "Roobet VPN", "VPN kasyno", "bonus bez depozytu", "bonus powitalny", "Stake legalny", "alternatywa Stake", "natychmiastowa wypłata", "darmowe spiny", "kod promocyjny"],
+  id: ["Stake VPN", "Roobet VPN", "VPN casino", "bonus tanpa deposit", "bonus selamat datang", "Stake legal", "alternatif Stake", "penarikan instan", "putaran gratis", "kode promosi"],
+  th: ["Stake VPN", "Roobet VPN", "VPN คาสิโน", "โบนัสไม่ต้องฝาก", "โบนัสต้อนรับ", "Stake ถูกกฎหมาย", "ทางเลือก Stake", "ถอนทันที", "ฟรีสปิน", "รหัสโปรโมชั่น"],
+  bn: ["Stake VPN", "Roobet VPN", "ক্যাসিনো VPN", "নো ডিপোজিট বোনাস", "স্বাগত বোনাস", "Stake আইনি", "Stake বিকল্প", "তাৎক্ষণিক উত্তোলন", "বিনামূল্যে স্পিন", "প্রমো কোড"],
+  ms: ["Stake VPN", "Roobet VPN", "VPN kasino", "bonus tanpa deposit", "bonus selamat datang", "Stake sah", "alternatif Stake", "pengeluaran segera", "putaran percuma", "kod promosi"],
+};
+
 /** Per-locale keyword sets – top search terms in that language */
 const LOCALE_KEYWORDS: Record<Locale, string[]> = {
-  en: [...EN_BASE, ...TYPO_KEYWORDS],
+  en: [...EN_BASE, ...EN_EXTRA, ...TYPO_KEYWORDS],
   zh: [
     "Stake 策略",
     "Roobet 策略",
@@ -119,8 +254,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "比赛预测",
     "1xbet 策略",
     "下载博彩工具",
+    ...LOCALE_EXTRA.zh,
     ...EN_BASE.slice(0, 15),
-    ...TYPO_KEYWORDS.slice(0, 10),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   es: [
     "estrategia Stake",
@@ -131,8 +268,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "apuestas deportivas",
     "predicción partidos",
     "descargar herramientas apuestas",
+    ...LOCALE_EXTRA.es,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   hi: [
     "Stake रणनीति",
@@ -140,8 +279,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "क्रिप्टो कैसीनो",
     "स्पोर्ट्स बेटिंग",
     "मैच भविष्यवाणी",
+    ...LOCALE_EXTRA.hi,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   ar: [
     "استراتيجية Stake",
@@ -149,8 +290,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "كازينو كريبتو",
     "مراهنات رياضية",
     "تنبؤ المباريات",
+    ...LOCALE_EXTRA.ar,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   pt: [
     "estratégia Stake",
@@ -160,8 +303,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "apostas desportivas",
     "previsão de jogos",
     "descarregar ferramentas apostas",
+    ...LOCALE_EXTRA.pt,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   ru: [
     "стратегия Stake",
@@ -169,8 +314,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "крипто казино",
     "спортивные ставки",
     "прогноз матчей",
+    ...LOCALE_EXTRA.ru,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   ja: [
     "Stake 戦略",
@@ -179,8 +326,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "暗号カジノ",
     "スポーツベッティング",
     "試合予測",
+    ...LOCALE_EXTRA.ja,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   de: [
     "Stake Strategie",
@@ -189,8 +338,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "Sportwetten Tipps",
     "Spielvorhersage",
     "Wett-Tools herunterladen",
+    ...LOCALE_EXTRA.de,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   fr: [
     "stratégie Stake",
@@ -200,8 +351,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "paris sportifs",
     "prédiction match",
     "télécharger outils paris",
+    ...LOCALE_EXTRA.fr,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   ko: [
     "Stake 전략",
@@ -210,8 +363,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "암호화폐 카지노",
     "스포츠 베팅",
     "경기 예측",
+    ...LOCALE_EXTRA.ko,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   tr: [
     "Stake strateji",
@@ -219,8 +374,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "kripto casino",
     "spor bahisleri",
     "maç tahmini",
+    ...LOCALE_EXTRA.tr,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   vi: [
     "chiến lược Stake",
@@ -228,8 +385,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "casino crypto",
     "cá cược thể thao",
     "dự đoán trận đấu",
+    ...LOCALE_EXTRA.vi,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   it: [
     "strategia Stake",
@@ -237,8 +396,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "casino crypto",
     "scommesse sportive",
     "previsione partite",
+    ...LOCALE_EXTRA.it,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   nl: [
     "Stake strategie",
@@ -246,8 +407,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "crypto casino",
     "sportweddenschappen",
     "wedstrijdvoorspelling",
+    ...LOCALE_EXTRA.nl,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   pl: [
     "strategia Stake",
@@ -255,8 +418,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "kasyno krypto",
     "zakłady sportowe",
     "predykcja meczu",
+    ...LOCALE_EXTRA.pl,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   id: [
     "strategi Stake",
@@ -264,8 +429,10 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "casino kripto",
     "taruhan olahraga",
     "prediksi pertandingan",
+    ...LOCALE_EXTRA.id,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   th: [
     "กลยุทธ์ Stake",
@@ -273,16 +440,20 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "คาสิโนคริปโต",
     "การเดิมพันกีฬา",
     "ทำนายแมตช์",
+    ...LOCALE_EXTRA.th,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   bn: [
     "Stake কৌশল",
     "Roobet ভবিষ্যদ্বাণী",
     "ক্রিপ্টো ক্যাসিনো",
     "খেলাধুলা বেটিং",
+    ...LOCALE_EXTRA.bn,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
   ms: [
     "strategi Stake",
@@ -290,16 +461,25 @@ const LOCALE_KEYWORDS: Record<Locale, string[]> = {
     "kasino kripto",
     "pertaruhan sukan",
     "ramalan perlawanan",
+    ...LOCALE_EXTRA.ms,
     ...EN_BASE.slice(0, 12),
-    ...TYPO_KEYWORDS.slice(0, 8),
+    ...EN_EXTRA.slice(0, 8),
+    ...TYPO_KEYWORDS.slice(0, 12),
   ],
 };
 
-/** Sport-specific top search keywords (all languages get sport + casino + download) */
+/** Sport-specific keywords – in page language (e.g. "Football ベッティング" for ja) + English + locale base */
 export function getSportKeywords(sportSlug: string, locale: Locale): string[] {
   const sport = SPORTS.find((s) => s.slug === sportSlug);
   const name = sport?.name ?? sportSlug;
-  const base = [
+  const stems = LOCALE_STEMS[locale] ?? LOCALE_STEMS.en;
+  const inLocale = [
+    `${name} ${stems.betting} ${stems.tips}`,
+    `${name} ${stems.matchPrediction}`,
+    `${name} ${stems.strategy}`,
+    `${stems.betting} ${name}`,
+  ];
+  const baseEn = [
     `${name} betting tips`,
     `${name} match prediction`,
     `${name} strategy`,
@@ -309,10 +489,10 @@ export function getSportKeywords(sportSlug: string, locale: Locale): string[] {
     "Roobet sports",
     "1xbet sports",
   ];
-  return [...base, ...(LOCALE_KEYWORDS[locale] ?? LOCALE_KEYWORDS.en).slice(0, 10)];
+  return [...inLocale, ...baseEn, ...(LOCALE_KEYWORDS[locale] ?? LOCALE_KEYWORDS.en).slice(0, 10)];
 }
 
-/** Meta keywords for a page – heavy rank level, all languages + typos */
+/** Meta keywords for a page – heavy rank level, all types (casino+game+strategy/predictor, sport, etc.) in page language + typos */
 export function getMetaKeywords(
   locale: Locale,
   options?: {
@@ -323,27 +503,31 @@ export function getMetaKeywords(
   }
 ): string[] {
   const list = [...(LOCALE_KEYWORDS[locale] ?? LOCALE_KEYWORDS.en)];
+  const stems = LOCALE_STEMS[locale] ?? LOCALE_STEMS.en;
   if (options?.casino) {
+    const c = options.casino;
     list.unshift(
-      `${options.casino} strategy`,
-      `${options.casino} predictor`,
-      `${options.casino} tips`,
-      `${options.casino} mines`,
-      `${options.casino} crash`
+      `${c} ${stems.strategy}`,
+      `${c} ${stems.predictor}`,
+      `${c} ${stems.tips}`,
+      `${c} mines ${stems.strategy}`,
+      `${c} crash ${stems.predictor}`
     );
   }
   if (options?.game) {
+    const g = options.game;
     list.unshift(
-      `${options.game} strategy`,
-      `${options.game} predictor`,
-      `${options.game} tips`
+      `${g} ${stems.strategy}`,
+      `${g} ${stems.predictor}`,
+      `${g} ${stems.tips}`
     );
   }
   if (options?.sport) {
+    const s = options.sport;
     list.unshift(
-      `${options.sport} betting`,
-      `${options.sport} match prediction`,
-      `${options.sport} tips`
+      `${s} ${stems.betting}`,
+      `${s} ${stems.matchPrediction}`,
+      `${s} ${stems.tips}`
     );
   }
   if (options?.includeTypos !== false) {
