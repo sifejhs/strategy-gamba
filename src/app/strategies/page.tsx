@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
 import { getAllStrategySlugs } from "@/lib/strategy-data";
+import { SITE_BASE } from "@/lib/seo-hreflang";
 
 export const metadata: Metadata = {
   title: "All Strategy Pages – Stake, Roobet, Crash, Mines & Every Casino",
   description:
     "Full list of strategy and predictor pages: Stake mines strategy, Roobet crash predictor, blackjack tips and more for 30+ casinos and 14 games. Strategy Gamba.",
+  alternates: { canonical: `${SITE_BASE}/en/strategies` },
+  robots: "noindex, follow",
 };
 
 export default function StrategiesPage() {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
+import { SITE_BASE } from "@/lib/seo-hreflang";
 
 function slugToName(slug: string) {
   return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -17,6 +18,8 @@ export async function generateMetadata({
   return {
     title: `${name} Strategy & Tips – Crypto Casino Guide`,
     description: `Strategy and tips for ${name}. Mines, Dice, Keno, Roulette, Blackjack, HiLo, Plinko. No strategy is 100%.`,
+    alternates: { canonical: `${SITE_BASE}/en/bonus/${slug}` },
+    robots: "noindex, follow",
   };
 }
 

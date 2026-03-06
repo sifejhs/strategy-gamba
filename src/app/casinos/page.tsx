@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
+import { SITE_BASE } from "@/lib/seo-hreflang";
 
 const CASINOS = [
   "stake", "roobet", "shuffle", "wolf-bet", "1xbet", "aviator", "bustabit",
@@ -14,6 +15,8 @@ const CASINOS = [
 export const metadata: Metadata = {
   title: "Crypto Casinos – Stake, Roobet, 1xbet, Aviator & 30+ Sites",
   description: "Strategy guides and tips for 30+ crypto casinos: Stake, Roobet, Shuffle, Wolf.bet, 1xbet, Aviator, Bustabit, Rollbit, BC.Game and more.",
+  alternates: { canonical: `${SITE_BASE}/en/bonus` },
+  robots: "noindex, follow",
 };
 
 export default function CasinosIndex() {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
+import { SITE_BASE } from "@/lib/seo-hreflang";
 
 const GAMES: Record<string, { name: string; description: string }> = {
   mines: { name: "Mines", description: "Mines strategy and tips for crypto casinos." },
@@ -24,6 +25,8 @@ export async function generateMetadata({
   return {
     title: `${game.name} Strategy – Tips for Stake, Roobet & Crypto Casinos | Strategy Gamba`,
     description: game.description + " Stake, Roobet, 1xbet, Aviator, Bustabit. No strategy is 100%.",
+    alternates: { canonical: `${SITE_BASE}/en/sports` },
+    robots: "noindex, follow",
   };
 }
 
