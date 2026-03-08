@@ -7,7 +7,7 @@ function randomVersion(): string {
   return (Math.random() * 6 + 5).toFixed(2);
 }
 
-/** Streams the current download file with filename Wu-predictorX.XX.zip (or .rar). Version is random each time. */
+/** Serves the current download file with filename Wu-predictorX.XX.zip (or .rar). Version is random each time. */
 export async function GET() {
   const url = await getDownloadUrl();
   const isRar = url.toLowerCase().includes(".rar");
@@ -16,27 +16,30 @@ export async function GET() {
   const filename = `Wu-predictor${version}.${ext}`;
   const contentType = isRar ? "application/vnd.rar" : "application/zip";
 
-  let body: ReadableStream<Uint8Array> | Buffer;
+  let buffer: Buffer;
   if (url.startsWith("http")) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
       return new Response("Download unavailable", { status: 502 });
     }
-    body = res.body!;
+    const arr = await res.arrayBuffer();
+    buffer = Buffer.from(arr);
   } else {
     const pathname = url.replace(/^\//, "");
     const filePath = join(process.cwd(), "public", pathname);
     try {
-      body = await readFile(filePath);
+      buffer = await readFile(filePath);
     } catch {
       return new Response("File not found", { status: 404 });
     }
   }
 
-  return new Response(body, {
+  return new Response(buffer, {
     headers: {
-      "Content-Disposition": `attachment; filename="${filename}"`,
       "Content-Type": contentType,
+      "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+      "Content-Length": String(buffer.length),
+      "Cache-Control": "no-store, no-cache, must-revalidate",
     },
   });
 }
