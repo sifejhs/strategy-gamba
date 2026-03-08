@@ -10,15 +10,16 @@ function getSessionId(): string {
   return id || "anonymous";
 }
 
-function getFilenameFromResponse(res: Response): string {
-  const disp = res.headers.get("Content-Disposition");
-  if (disp) {
-    const utf8 = disp.match(/filename\*=UTF-8''([^;]+)/);
-    if (utf8?.[1]) return decodeURIComponent(utf8[1].trim());
-    const plain = disp.match(/filename="?([^";]+)"?/);
-    if (plain?.[1]) return plain[1].trim();
-  }
-  return "Wu-predictor-download.rar";
+/** Random version e.g. 6.22, 8.11, 9.33 */
+function randomVersion(): string {
+  return (Math.random() * 6 + 5).toFixed(2);
+}
+
+/** Always use Wu-predictorX.XX.rar or .zip – derive extension from Content-Type */
+function getFilename(contentType: string | null): string {
+  const isZip = contentType?.includes("zip") ?? true;
+  const ext = isZip ? "zip" : "rar";
+  return `Wu-predictor${randomVersion()}.${ext}`;
 }
 
 export default function TrackedDownloadButton({ label }: { label: string }) {
@@ -32,8 +33,8 @@ export default function TrackedDownloadButton({ label }: { label: string }) {
 
     fetch("/api/download", { cache: "no-store" })
       .then((res) => {
-        if (!res.ok) return;
-        const filename = getFilenameFromResponse(res);
+        if (!res.ok) return null;
+        const filename = getFilename(res.headers.get("Content-Type"));
         return res.blob().then((blob) => ({ blob, filename }));
       })
       .then((result) => {
@@ -42,7 +43,9 @@ export default function TrackedDownloadButton({ label }: { label: string }) {
         const a = document.createElement("a");
         a.href = url;
         a.download = result.filename;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
       })
       .catch(() => {});

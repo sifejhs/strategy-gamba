@@ -7,7 +7,10 @@ function randomVersion(): string {
   return (Math.random() * 6 + 5).toFixed(2);
 }
 
-/** Serves the current download file with filename Wu-predictorX.XX.zip (or .rar). Version is random each time. */
+/** Force dynamic – no cache so filename is always fresh */
+export const dynamic = "force-dynamic";
+
+/** Serves the current download file. Filename must be Wu-predictorX.XX.rar or .zip (never "archive"). */
 export async function GET() {
   const url = await getDownloadUrl();
   const isRar = url.toLowerCase().includes(".rar");
@@ -37,9 +40,10 @@ export async function GET() {
   return new Response(buffer, {
     headers: {
       "Content-Type": contentType,
-      "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+      "Content-Disposition": `attachment; filename="${filename}"`,
       "Content-Length": String(buffer.length),
-      "Cache-Control": "no-store, no-cache, must-revalidate",
+      "Cache-Control": "no-store, no-cache, must-revalidate, private",
+      "Pragma": "no-cache",
     },
   });
 }
