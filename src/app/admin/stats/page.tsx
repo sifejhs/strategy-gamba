@@ -97,12 +97,12 @@ export default function AdminStatsPage() {
         <section className="rounded-lg border border-slate-700 bg-slate-900 p-4 mb-8">
           <h2 className="text-lg font-semibold text-slate-200 mb-3">Download file (all Download buttons)</h2>
           <p className="text-slate-400 text-sm mb-3">
-            Upload a .zip file. It will be used for every &quot;Download our software&quot; button across the site. Change it anytime.
+            Upload a .zip or .rar file. It will be used for every &quot;Download our software&quot; button across the site. Change it anytime.
           </p>
           <input
             ref={fileInputRef}
             type="file"
-            accept=".zip"
+            accept=".zip,.rar"
             className="hidden"
             onChange={async (e) => {
               const file = e.target.files?.[0];
@@ -133,7 +133,7 @@ export default function AdminStatsPage() {
             disabled={uploading}
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
           >
-            {uploading ? "Uploading…" : "Upload .zip"}
+            {uploading ? "Uploading…" : "Upload .zip or .rar"}
           </button>
           {uploadStatus && (
             <p className={`mt-2 text-sm ${uploadStatus.type === "ok" ? "text-emerald-400" : "text-red-400"}`}>

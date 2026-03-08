@@ -4,7 +4,8 @@ import { setDownloadUrl } from "@/lib/download-store";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
-const ZIP_PATH = "downloads/tools.zip";
+const BLOB_ZIP = "downloads/archive.zip";
+const BLOB_RAR = "downloads/archive.rar";
 const MAX_SIZE = 4.5 * 1024 * 1024; // 4.5 MB (Vercel server body limit)
 
 export async function POST(request: NextRequest) {
@@ -26,8 +27,10 @@ export async function POST(request: NextRequest) {
   }
 
   const name = (file.name || "").toLowerCase();
-  if (!name.endsWith(".zip")) {
-    return new Response(JSON.stringify({ error: "Only .zip files are allowed" }), { status: 400 });
+  const isZip = name.endsWith(".zip");
+  const isRar = name.endsWith(".rar");
+  if (!isZip && !isRar) {
+    return new Response(JSON.stringify({ error: "Only .zip or .rar files are allowed" }), { status: 400 });
   }
 
   if (file.size > MAX_SIZE) {
@@ -47,21 +50,23 @@ export async function POST(request: NextRequest) {
     try {
       const { put, del, list } = await import("@vercel/blob");
 
-      // Delete existing file first to avoid conflicts
+      const blobPath = isZip ? BLOB_ZIP : BLOB_RAR;
+      const otherPath = isZip ? BLOB_RAR : BLOB_ZIP;
+      const contentType = isZip ? "application/zip" : "application/vnd.rar";
+
       try {
         const { blobs } = await list({ prefix: "downloads/" });
-        const existing = blobs.find((b) => b.pathname === ZIP_PATH);
-        if (existing) {
-          await del(existing.url);
+        for (const b of blobs) {
+          if (b.pathname === blobPath || b.pathname === otherPath) await del(b.url);
         }
       } catch {
         // ignore delete errors
       }
 
-      const blob = await put(ZIP_PATH, buffer, {
+      const blob = await put(blobPath, buffer, {
         access: "public",
         addRandomSuffix: false,
-        contentType: "application/zip",
+        contentType,
       });
       await setDownloadUrl(blob.url);
       return new Response(
@@ -78,16 +83,19 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Local dev fallback: write to public/downloads/tools.zip
+  // Local dev fallback: write to public/downloads/archive.zip or archive.rar + current.json
   try {
     const dir = path.join(process.cwd(), "public", "downloads");
     await mkdir(dir, { recursive: true });
-    const filePath = path.join(dir, "tools.zip");
+    const filename = isZip ? "archive.zip" : "archive.rar";
+    const filePath = path.join(dir, filename);
     await writeFile(filePath, buffer);
+    const currentPath = path.join(dir, "current.json");
+    await writeFile(currentPath, JSON.stringify({ file: filename }), "utf-8");
     return new Response(
       JSON.stringify({
         ok: true,
-        url: "/downloads/tools.zip",
+        url: `/downloads/${filename}`,
         message: "Uploaded. All download buttons now use this file.",
       }),
       { headers: { "Content-Type": "application/json" } }

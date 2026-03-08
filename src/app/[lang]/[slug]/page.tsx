@@ -17,6 +17,7 @@ import { getMetaKeywords } from "@/lib/keywords";
 import { isLocale, type Locale } from "@/lib/locales";
 import Disclaimer from "@/components/Disclaimer";
 import DownloadButton from "@/components/DownloadButton";
+import DownloadPasswordNotice from "@/components/DownloadPasswordNotice";
 import BreadcrumbJsonLd from "@/components/BreadcrumbJsonLd";
 import RelatedLinks from "@/components/RelatedLinks";
 import DownloadCta from "@/components/DownloadCta";
@@ -262,6 +263,7 @@ export default async function StrategyPage({
 
         <div className="mt-6 rounded-lg border border-emerald-600/50 bg-slate-800/50 p-4">
           <p className="text-slate-200">{t.strategyDownloadCtaStrong}</p>
+          <DownloadPasswordNotice />
           <div className="mt-3">
             <DownloadButton lang={locale} />
           </div>

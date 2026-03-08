@@ -1,10 +1,10 @@
 /**
  * Current download file URL for all "Download" buttons.
- * - Local/dev: we write to public/downloads/tools.zip → URL is /downloads/tools.zip
- * - Vercel (with BLOB_READ_WRITE_TOKEN): zip and config URL stored in Vercel Blob
+ * - Local/dev: public/downloads/archive.zip or .rar; current.json stores which file.
+ * - Vercel (with BLOB_READ_WRITE_TOKEN): .zip or .rar blob URL stored in config.
  */
 
-const FALLBACK_URL = "/downloads/tools.zip";
+const FALLBACK_URL = "/downloads/archive.zip";
 const CONFIG_PATH = "config/download-url.txt";
 
 export async function getDownloadUrl(): Promise<string> {
@@ -23,6 +23,18 @@ export async function getDownloadUrl(): Promise<string> {
     } catch {
       // fall through to fallback
     }
+  }
+  try {
+    const { readFile } = await import("fs/promises");
+    const { join } = await import("path");
+    const currentPath = join(process.cwd(), "public", "downloads", "current.json");
+    const data = await readFile(currentPath, "utf-8");
+    const parsed = JSON.parse(data) as { file?: string };
+    if (parsed?.file && typeof parsed.file === "string") {
+      return `/downloads/${parsed.file}`;
+    }
+  } catch {
+    // no current.json or invalid
   }
   return FALLBACK_URL;
 }

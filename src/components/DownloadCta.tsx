@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
 import DownloadButton from "./DownloadButton";
+import DownloadPasswordNotice from "./DownloadPasswordNotice";
 
 /** Full CTA block: improve win chance by following our prediction and strategy tools – link to download on every page */
 export default function DownloadCta({ lang = "en" }: { lang?: Locale }) {
@@ -14,6 +15,7 @@ export default function DownloadCta({ lang = "en" }: { lang?: Locale }) {
       <p className="mt-2 text-slate-300">
         {cta}
       </p>
+      <DownloadPasswordNotice />
       <div className="mt-4">
         <DownloadButton lang={lang} />
       </div>
