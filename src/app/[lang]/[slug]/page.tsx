@@ -12,7 +12,7 @@ import {
   getStrategyDescriptionForLocale,
   getTranslations,
 } from "@/lib/translations";
-import { buildHreflang, SITE_BASE, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
+import { buildHreflang, getCanonicalUrl, SITE_BASE, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getMetaKeywords } from "@/lib/keywords";
 import { isLocale, type Locale } from "@/lib/locales";
 import Disclaimer from "@/components/Disclaimer";
@@ -57,6 +57,7 @@ export async function generateMetadata({
     slug
   );
   const alternates = buildHreflang(locale, slug);
+  const canonicalUrl = getCanonicalUrl(locale, slug);
   const keywords = getMetaKeywords(locale, {
     casino: names.casino,
     game: names.game,
@@ -69,7 +70,14 @@ export async function generateMetadata({
     description,
     keywords: keywords.join(", "),
     alternates,
-    openGraph: { title, description, images: [{ url: ogImage, width: 1200, height: 630, alt: `${names.casino} ${names.game} ${names.variant}` }], type: "article" },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type: "article",
+      locale: locale,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${names.casino} ${names.game} ${names.variant}` }],
+    },
     twitter: { card: "summary_large_image", title, description },
     robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };

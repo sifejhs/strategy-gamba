@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, getMetadataBase, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
+import { buildHreflang, getCanonicalUrl, getMetadataBase, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getMetaKeywords } from "@/lib/keywords";
 import { CASINOS } from "@/lib/strategy-data";
 import Disclaimer from "@/components/Disclaimer";
@@ -25,6 +25,7 @@ export async function generateMetadata({
   const locale = isLocale(lang) ? lang : "en";
   const t = getTranslations(locale);
   const alternates = buildHreflang(locale, "bonus");
+  const canonicalUrl = getCanonicalUrl(locale, "bonus");
   const keywords = getMetaKeywords(locale, { includeTypos: true });
   const base = getMetadataBase();
   const ogImage = new URL("/images/og-default.svg", base);
@@ -36,9 +37,10 @@ export async function generateMetadata({
     openGraph: {
       title: t.bonusTitle,
       description: t.bonusDesc,
+      url: canonicalUrl,
       type: "website",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: t.bonusTitle }],
       locale,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: t.bonusTitle }],
     },
     twitter: { card: "summary_large_image", title: t.bonusTitle, description: t.bonusDesc },
     robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",

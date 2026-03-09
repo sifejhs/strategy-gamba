@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
+import { buildHreflang, getCanonicalUrl, getMetadataBase, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getSportKeywords } from "@/lib/keywords";
 import { SPORTS, TIER1_CASINO_SLUGS, CASINOS } from "@/lib/strategy-data";
 import Disclaimer from "@/components/Disclaimer";
@@ -28,6 +28,7 @@ export async function generateMetadata({
   const title = t.sportPageTitle(sport.name);
   const description = t.sportPageDesc(sport.name);
   const alternates = buildHreflang(locale, `sport/${sportSlug}`);
+  const canonicalUrl = getCanonicalUrl(locale, `sport/${sportSlug}`);
   const keywords = getSportKeywords(sportSlug, locale);
   const base = getMetadataBase();
   const ogImage = new URL("/images/og-default.svg", base);
@@ -39,9 +40,10 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
+      url: canonicalUrl,
       type: "website",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${sport.name} betting – Strategy Gamba` }],
       locale,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${sport.name} betting – Strategy Gamba` }],
     },
     twitter: { card: "summary_large_image", title, description },
     robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",

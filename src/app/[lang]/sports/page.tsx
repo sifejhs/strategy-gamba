@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/locales";
 import { getTranslations } from "@/lib/translations";
-import { buildHreflang, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
+import { buildHreflang, getCanonicalUrl, SITE_BASE, IS_PRODUCTION } from "@/lib/seo-hreflang";
 import { getDefaultMetaKeywords } from "@/lib/keywords";
 import { SPORTS } from "@/lib/strategy-data";
 import Disclaimer from "@/components/Disclaimer";
@@ -23,13 +23,14 @@ export async function generateMetadata({
   const locale = isLocale(lang) ? lang : "en";
   const t = getTranslations(locale);
   const alternates = buildHreflang(locale, "sports");
+  const canonicalUrl = getCanonicalUrl(locale, "sports");
   const keywords = getDefaultMetaKeywords(locale);
   return {
     title: t.sportsTitle,
     description: t.sportsDesc,
     keywords: keywords.join(", "),
     alternates,
-    openGraph: { title: t.sportsTitle, description: t.sportsDesc },
+    openGraph: { title: t.sportsTitle, description: t.sportsDesc, url: canonicalUrl, locale },
     robots: IS_PRODUCTION ? "index, follow" : "noindex, nofollow",
   };
 }

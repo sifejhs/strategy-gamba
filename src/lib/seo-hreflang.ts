@@ -24,13 +24,19 @@ function normalizePath(p: string): string {
   return p.replace(/^\/+|\/+$/g, "").replace(/\/+/g, "/") || "";
 }
 
-/** Build alternates (canonical + hreflang + x-default). Canonical = this page's URL so each page is self-referencing. */
+/** Exact canonical URL for the current page – use for alternates and openGraph.url so Google picks this URL (no duplicate). */
+export function getCanonicalUrl(currentLang: Locale, pathAfterLang: string): string {
+  const path = normalizePath(pathAfterLang);
+  return path ? `${BASE}/${currentLang}/${path}` : `${BASE}/${currentLang}`;
+}
+
+/** Build alternates (canonical + hreflang + x-default). Canonical = this page only (self-referencing) to avoid "page en double". */
 export function buildHreflang(
   currentLang: Locale,
   pathAfterLang: string
 ): NonNullable<Metadata["alternates"]> {
   const path = normalizePath(pathAfterLang);
-  const canonical = path ? `${BASE}/${currentLang}/${path}` : `${BASE}/${currentLang}`;
+  const canonical = getCanonicalUrl(currentLang, pathAfterLang);
   const languages: Record<string, string> = {};
   for (const locale of LOCALES) {
     languages[locale] = path ? `${BASE}/${locale}/${path}` : `${BASE}/${locale}`;

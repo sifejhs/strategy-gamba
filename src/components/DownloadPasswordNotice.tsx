@@ -1,13 +1,13 @@
-/** Big, visible archive password – shown on every download section across the site */
+/** Big, visible archive password – shown on every download section (all pages & subpages) */
 const PASSWORD = "1234";
 
 export default function DownloadPasswordNotice() {
   return (
-    <div className="mt-3 rounded-lg border-2 border-amber-500/60 bg-amber-950/50 px-4 py-3 text-center">
-      <p className="text-sm font-medium text-amber-200/90 uppercase tracking-wide">
-        Archive password
+    <div className="mt-3 rounded-xl border-2 border-amber-500/70 bg-amber-950/60 px-5 py-4 text-center shadow-lg">
+      <p className="text-sm font-semibold text-amber-200 uppercase tracking-wider">
+        Archive password (for .zip / .rar)
       </p>
-      <p className="mt-1 text-2xl font-bold text-amber-400 tracking-wide">
+      <p className="mt-2 text-3xl font-bold text-amber-400 tracking-wide tabular-nums">
         {PASSWORD}
       </p>
     </div>
