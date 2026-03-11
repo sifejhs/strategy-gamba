@@ -83,7 +83,7 @@ export async function generateMetadata({
   };
 }
 
-/** Article JSON-LD for peak Google rich results */
+/** Article JSON-LD for peak Google rich results – inLanguage helps indexing per locale */
 function ArticleJsonLd({
   lang,
   slug,
@@ -109,6 +109,7 @@ function ArticleJsonLd({
     headline: title,
     description,
     url,
+    inLanguage: lang,
     image: imageUrl,
     datePublished: "2024-01-01",
     dateModified: new Date().toISOString().split("T")[0],
@@ -240,7 +241,10 @@ export default async function StrategyPage({
         <Link href={`/${locale}`} className="text-slate-400 hover:text-slate-200">
           {t.backHome}
         </Link>
-        <h1 className="mt-4 text-3xl font-bold text-slate-100">
+        <p className="mt-4 text-xs text-slate-500 uppercase tracking-wide" aria-hidden="true">
+          {names.casino} · {names.game} · {names.variant}
+        </p>
+        <h1 className="mt-2 text-3xl font-bold text-slate-100">
           {names.casino} {names.game} {names.variant}
         </h1>
         <p className="mt-2 text-slate-400">{intro}</p>
